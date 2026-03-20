@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Task Board</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="board">
+    <div class="col" id="todo">
+      <h2>To Do</h2>
+      <div class="cards"></div>
+      <input placeholder="Новая задача...">
+      <button onclick="addTask('todo')">+</button>
+    </div>
+    <div class="col" id="doing">
+      <h2>In Progress</h2>
+      <div class="cards"></div>
+    </div>
+    <div class="col" id="done">
+      <h2>Done</h2>
+      <div class="cards"></div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
