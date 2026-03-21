@@ -13,7 +13,7 @@ CORS(app)
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
-    status = db.Column(db.String(50), default='pending')
+    status = db.Column(db.String(50), default='todo')
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
 @app.route('/tasks', methods=['GET'])

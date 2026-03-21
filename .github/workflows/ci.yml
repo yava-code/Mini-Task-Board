@@ -21,10 +21,7 @@ jobs:
       - name: Install deps
         run: pip install -r requirements.txt
 
-      - name: Start server and smoke test
-        run: |
-          python app.py &
-          sleep 3
-          curl -f http://localhost:5000/tasks
+      - name: Run tests
+        run: pytest -q
 
 
