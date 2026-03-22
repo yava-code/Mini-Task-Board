@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}TaskBoard — визитка{% endblock %}
+{% block content %}
+<section class="welcome">
+  <h1>Мини-доска задач</h1>
+  <p>
+    Это учебный проект в паре: простой клон Trello на Flask — колонки «сделать / в процессе / готово»,
+    карточки и API. Мы собирали его, чтобы потренировать парную разработку и фронтенд.
+  </p>
+  <p>
+    Чтобы пользоваться доской, нужен аккаунт: зарегистрируйся или войди — тогда откроется рабочая страница с задачами.
+    Пока ты гость, можешь почитать «О проекте» и «Контакты» в шапке.
+  </p>
+  {% if session.get('user_id') %}
+  <div class="welcome-actions">
+    <a class="btn-primary" href="{{ url_for('board') }}">Перейти к доске</a>
+    <a class="btn-ghost" href="{{ url_for('info') }}">О проекте</a>
+  </div>
+  {% else %}
+  <div class="welcome-actions">
+    <a class="btn-primary" href="{{ url_for('register') }}">Регистрация</a>
+    <a class="btn-primary" href="{{ url_for('login') }}">Войти</a>
+    <a class="btn-ghost" href="{{ url_for('info') }}">О проекте</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

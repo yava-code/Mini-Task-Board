@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Доска — TaskBoard{% endblock %}
+{% block content %}
+<div class="board">
+  <div class="col" id="todo">
+    <h2>To Do</h2>
+    <div class="cards"></div>
+    <input placeholder="Новая задача...">
+    <button type="button" onclick="addTask('todo')">+</button>
+  </div>
+  <div class="col" id="doing">
+    <h2>In Progress</h2>
+    <div class="cards"></div>
+  </div>
+  <div class="col" id="done">
+    <h2>Done</h2>
+    <div class="cards"></div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endblock %}

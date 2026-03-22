@@ -1,10 +1,10 @@
-<body>
-    <div id="header"></div>
-  
-<h1>Контакты</h1>
-<p>Пишите нам в Телеграм или ищите на GitHub!</p>
-<a href="/">На главную</a>
-<div id="footer"></div>
-<script src="components.js"></script>
-<script src="app.js"></script>  <!-- только на главной -->
-</body>
+{% extends "base.html" %}
+{% block title %}Контакты — TaskBoard{% endblock %}
+{% block content %}
+<div class="page">
+  <h1>Контакты</h1>
+  <p>Пишите в Telegram или ищите репозиторий на GitHub.</p>
+  <p><a href="{{ url_for('welcome_page') }}">Визитка</a>
+  {% if session.get('user_id') %} · <a href="{{ url_for('board') }}">Доска</a>{% endif %}</p>
+</div>
+{% endblock %}
