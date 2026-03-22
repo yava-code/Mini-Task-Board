@@ -121,3 +121,54 @@
   .col > button:hover {
     background: #4a59d0;
   }
+  
+  header {
+    max-width: 960px;
+    margin: 0 auto 24px;
+    padding: 16px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2d2d3f;
+  }
+  
+  header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .logo {
+    font-weight: bold;
+    font-size: 16px;
+    color: #5b6af0;
+    letter-spacing: 1px;
+  }
+  
+  header ul {
+    list-style: none;
+    display: flex;
+    gap: 24px;
+  }
+  
+  header a {
+    color: #9ca3b8;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+  
+  header a:hover {
+    color: #fff;
+  }
+  
+  footer {
+    max-width: 960px;
+    margin: 32px auto 0;
+    padding: 16px 0;
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    border-top: 1px solid #2d2d3f;
+  }
