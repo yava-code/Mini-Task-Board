@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page">
   <h1>About</h1>
-  <p>Flask backend, SQLite, plain HTML/CSS/JS. Tasks are tied to your account — everyone sees only their own cards.</p>
+  <p>Flask backend, MongoDB, plain HTML/CSS/JS. Tasks are tied to your account — everyone sees only their own cards.</p>
   <p><a href="{{ url_for('welcome_page') }}">Landing page</a>
   {% if session.get('user_id') %} · <a href="{{ url_for('board') }}">Board</a>{% endif %}</p>
 </div>

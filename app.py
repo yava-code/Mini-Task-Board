@@ -2,30 +2,41 @@ import os
 from datetime import datetime, timezone
 from functools import wraps
 
-from flask import Flask, abort, jsonify, redirect, render_template, request, session, url_for
+from bson import ObjectId
+from bson.errors import InvalidId
+from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
+from pymongo import MongoClient
 from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tasks.db"
-db = SQLAlchemy(app)
+app.config["MONGO_URI"] = os.environ.get("MONGO_URI", "mongodb://127.0.0.1:27017")
+app.config["MONGO_DB_NAME"] = os.environ.get("MONGO_DB_NAME", "taskboard")
+
 CORS(app)
 
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(256), nullable=False)
+mongo_db = None
 
 
-class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    title = db.Column(db.String(200), nullable=False)
-    status = db.Column(db.String(50), default="todo")
-    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+def init_db():
+    global mongo_db
+    uri = app.config["MONGO_URI"]
+    if app.config.get("TESTING"):
+        import mongomock
+
+        client = mongomock.MongoClient()
+    else:
+        client = MongoClient(uri)
+    mongo_db = client[app.config["MONGO_DB_NAME"]]
+    mongo_db.users.create_index("email", unique=True)
+
+
+def get_db():
+    global mongo_db
+    if mongo_db is None:
+        init_db()
+    return mongo_db
 
 
 def login_required(f):
@@ -81,12 +92,13 @@ def login():
     if session.get("user_id"):
         return redirect(url_for("board"))
     err = None
+    db = get_db()
     if request.method == "POST":
         email = (request.form.get("email") or "").strip().lower()
         password = request.form.get("password") or ""
-        user = User.query.filter_by(email=email).first()
-        if user and check_password_hash(user.password_hash, password):
-            session["user_id"] = user.id
+        user = db.users.find_one({"email": email})
+        if user and check_password_hash(user["password_hash"], password):
+            session["user_id"] = str(user["_id"])
             nxt = request.form.get("next") or request.args.get("next") or url_for("board")
             if not nxt.startswith("/"):
                 nxt = url_for("board")
@@ -100,6 +112,7 @@ def register():
     if session.get("user_id"):
         return redirect(url_for("board"))
     err = None
+    db = get_db()
     if request.method == "POST":
         email = (request.form.get("email") or "").strip().lower()
         password = request.form.get("password") or ""
@@ -107,16 +120,18 @@ def register():
             err = "enter a valid email"
         elif len(password) < 3:
             err = "password must be at least 3 characters"
-        elif User.query.filter_by(email=email).first():
+        elif db.users.find_one({"email": email}):
             err = "that email is already registered"
         else:
-            u = User(
-                email=email,
-                password_hash=generate_password_hash(password),
+            uid = ObjectId()
+            db.users.insert_one(
+                {
+                    "_id": uid,
+                    "email": email,
+                    "password_hash": generate_password_hash(password),
+                }
             )
-            db.session.add(u)
-            db.session.commit()
-            session["user_id"] = u.id
+            session["user_id"] = str(uid)
             return redirect(url_for("board"))
     return render_template("register.html", error=err)
 
@@ -130,9 +145,12 @@ def logout():
 @app.route("/tasks", methods=["GET"])
 @api_login_required
 def get_tasks():
+    db = get_db()
     uid = session["user_id"]
-    tasks = Task.query.filter_by(user_id=uid).order_by(Task.created_at).all()
-    return jsonify([{"id": t.id, "title": t.title, "status": t.status} for t in tasks])
+    cur = db.tasks.find({"user_id": uid}).sort("created_at", 1)
+    return jsonify(
+        [{"id": str(t["_id"]), "title": t["title"], "status": t["status"]} for t in cur]
+    )
 
 
 @app.route("/tasks", methods=["POST"])
@@ -142,40 +160,57 @@ def create_task():
     title = (data.get("title") or "").strip()
     if not title:
         return jsonify({"error": "title required"}), 400
-    t = Task(title=title, user_id=session["user_id"])
-    db.session.add(t)
-    db.session.commit()
-    return jsonify({"id": t.id, "title": t.title, "status": t.status}), 201
+    db = get_db()
+    doc = {
+        "user_id": session["user_id"],
+        "title": title,
+        "status": "todo",
+        "created_at": datetime.now(timezone.utc),
+    }
+    res = db.tasks.insert_one(doc)
+    return (
+        jsonify(
+            {"id": str(res.inserted_id), "title": title, "status": "todo"}
+        ),
+        201,
+    )
 
 
-@app.route("/tasks/<int:id>", methods=["PATCH"])
+@app.route("/tasks/<task_id>", methods=["PATCH"])
 @api_login_required
-def update_task(id):
+def update_task(task_id):
+    try:
+        oid = ObjectId(task_id)
+    except InvalidId:
+        return jsonify({"error": "not found"}), 404
+
+    db = get_db()
     uid = session["user_id"]
-    task = Task.query.get_or_404(id)
-    if task.user_id != uid:
-        abort(404)
+    task = db.tasks.find_one({"_id": oid, "user_id": uid})
+    if not task:
+        return jsonify({"error": "not found"}), 404
+
     data = request.get_json() or {}
     if "status" in data:
-        task.status = data["status"]
-    db.session.commit()
+        db.tasks.update_one({"_id": oid}, {"$set": {"status": data["status"]}})
     return jsonify({"message": "ok"})
 
 
-@app.route("/tasks/<int:id>", methods=["DELETE"])
+@app.route("/tasks/<task_id>", methods=["DELETE"])
 @api_login_required
-def delete_task(id):
+def delete_task(task_id):
+    try:
+        oid = ObjectId(task_id)
+    except InvalidId:
+        return jsonify({"error": "not found"}), 404
+
+    db = get_db()
     uid = session["user_id"]
-    task = Task.query.get_or_404(id)
-    if task.user_id != uid:
-        abort(404)
-    db.session.delete(task)
-    db.session.commit()
+    res = db.tasks.delete_one({"_id": oid, "user_id": uid})
+    if res.deleted_count == 0:
+        return jsonify({"error": "not found"}), 404
     return jsonify({"message": "deleted"})
 
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-
     app.run(debug=True)

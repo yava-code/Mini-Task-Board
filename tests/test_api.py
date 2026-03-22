@@ -62,3 +62,13 @@ def test_delete_task(client):
 
     r = client.get("/tasks")
     assert r.get_json() == []
+
+
+def test_users_see_own_tasks_only(client):
+    register(client, email="u1@test.com", password="secret")
+    client.post("/tasks", json={"title": "mine"}, content_type="application/json")
+
+    client.get("/logout")
+    register(client, email="u2@test.com", password="secret")
+    r = client.get("/tasks")
+    assert r.get_json() == []
