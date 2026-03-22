@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>{% block title %}TaskBoard{% endblock %}</title>
@@ -11,16 +11,16 @@
       <a class="logo" href="{% if session.get('user_id') %}{{ url_for('board') }}{% else %}{{ url_for('index') }}{% endif %}">TaskBoard</a>
       <nav>
         <ul>
-          <li><a href="{% if session.get('user_id') %}{{ url_for('board') }}{% else %}{{ url_for('index') }}{% endif %}">Главная</a></li>
-          <li><a href="{{ url_for('info') }}">О проекте</a></li>
-          <li><a href="{{ url_for('contact') }}">Контакты</a></li>
+          <li><a href="{% if session.get('user_id') %}{{ url_for('board') }}{% else %}{{ url_for('index') }}{% endif %}">Home</a></li>
+          <li><a href="{{ url_for('info') }}">About</a></li>
+          <li><a href="{{ url_for('contact') }}">Contact</a></li>
         </ul>
         <div class="nav-auth">
           {% if session.get('user_id') %}
-            <a href="{{ url_for('logout') }}">Выйти</a>
+            <a href="{{ url_for('logout') }}">Log out</a>
           {% else %}
-            <a class="nav-btn" href="{{ url_for('login') }}">Войти</a>
-            <a class="nav-btn" href="{{ url_for('register') }}">Регистрация</a>
+            <a class="nav-btn" href="{{ url_for('login') }}">Log in</a>
+            <a class="nav-btn" href="{{ url_for('register') }}">Sign up</a>
           {% endif %}
         </div>
       </nav>
@@ -32,7 +32,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>TaskBoard © 2025 — парный учебный проект</p>
+    <p>TaskBoard © 2025 — pair project for learning</p>
   </footer>
   {% block scripts %}{% endblock %}
 </body>

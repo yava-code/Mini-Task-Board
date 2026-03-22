@@ -8,76 +8,9 @@ function esc(s) {
   return d.innerHTML
 }
 
-<<<<<<< HEAD
 async function loadTasks() {
   const res = await fetch(`${API}/tasks`, { credentials: 'include' })
   if (!res.ok) return
-=======
-async function checkAuth() {
-  const res = await fetch(`${API}/auth/me`, { credentials: 'include' })
-  const authPanel = document.getElementById('auth-panel')
-  const userBar = document.getElementById('user-bar')
-  const boardWrap = document.getElementById('board-wrap')
-  const emailSpan = document.getElementById('user-email')
-
-  if (res.ok) {
-    const data = await res.json()
-    if (authPanel) authPanel.style.display = 'none'
-    if (userBar) userBar.style.display = 'flex'
-    if (boardWrap) boardWrap.style.display = 'block'
-    if (emailSpan) emailSpan.textContent = data.email
-    loadTasks()
-  } else {
-    if (authPanel) authPanel.style.display = 'flex'
-    if (userBar) userBar.style.display = 'none'
-    if (boardWrap) boardWrap.style.display = 'none'
-  }
-}
-
-async function register() {
-  const email = document.getElementById('email').value.trim()
-  const password = document.getElementById('password').value
-  const res = await fetch(`${API}/auth/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify({ email, password }),
-  })
-  if (res.ok) {
-    checkAuth()
-    return
-  }
-  const j = await res.json().catch(() => ({}))
-  alert(j.error || 'register failed')
-}
-
-async function login() {
-  const email = document.getElementById('email').value.trim()
-  const password = document.getElementById('password').value
-  const res = await fetch(`${API}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify({ email, password }),
-  })
-  if (res.ok) {
-    checkAuth()
-    return
-  }
-  const j = await res.json().catch(() => ({}))
-  alert(j.error || 'login failed')
-}
-
-async function logout() {
-  await fetch(`${API}/auth/logout`, { method: 'POST', credentials: 'include' })
-  checkAuth()
-}
-
-async function loadTasks() {
-  const res = await fetch(`${API}/tasks`, { credentials: 'include' })
-  if (!res.ok) return
-
->>>>>>> b4c50dfdc5fd813fc94ac55865b3fe473fef2dd4
   const tasks = await res.json()
 
   document.querySelectorAll('.cards').forEach((c) => {
@@ -100,13 +33,8 @@ function renderCard(task) {
 
   card.innerHTML = `
     <span>${esc(task.title)}</span>
-<<<<<<< HEAD
     ${nextStatus ? `<button type="button" class="move-btn" data-move>→</button>` : ''}
     <button type="button" data-del>✕</button>
-=======
-    ${nextStatus ? `<button type="button" class="move-btn" data-move data-id="${task.id}" data-next="${nextStatus}">→</button>` : ''}
-    <button type="button" data-del data-id="${task.id}">✕</button>
->>>>>>> b4c50dfdc5fd813fc94ac55865b3fe473fef2dd4
   `
 
   const moveBtn = card.querySelector('[data-move]')
@@ -152,8 +80,4 @@ async function deleteTask(id) {
   loadTasks()
 }
 
-<<<<<<< HEAD
 loadTasks()
-=======
-checkAuth()
->>>>>>> b4c50dfdc5fd813fc94ac55865b3fe473fef2dd4

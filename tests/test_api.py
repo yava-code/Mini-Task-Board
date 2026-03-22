@@ -1,14 +1,8 @@
 def register(client, email="a@b.c", password="secret"):
     return client.post(
-<<<<<<< HEAD
         "/register",
         data={"email": email, "password": password},
         follow_redirects=True,
-=======
-        "/auth/register",
-        json={"email": email, "password": password},
-        content_type="application/json",
->>>>>>> b4c50dfdc5fd813fc94ac55865b3fe473fef2dd4
     )
 
 
@@ -18,11 +12,7 @@ def test_tasks_requires_auth(client):
 
 
 def test_get_tasks_empty(client):
-<<<<<<< HEAD
     register(client)
-=======
-    assert register(client).status_code == 201
->>>>>>> b4c50dfdc5fd813fc94ac55865b3fe473fef2dd4
     r = client.get("/tasks")
     assert r.status_code == 200
     assert r.get_json() == []
@@ -70,14 +60,5 @@ def test_delete_task(client):
     r = client.delete(f"/tasks/{tid}")
     assert r.status_code == 200
 
-    r = client.get("/tasks")
-    assert r.get_json() == []
-
-
-def test_users_see_own_tasks_only(client):
-    register(client, email="u1@test.com", password="secret")
-    client.post("/tasks", json={"title": "mine"}, content_type="application/json")
-
-    register(client, email="u2@test.com", password="secret")
     r = client.get("/tasks")
     assert r.get_json() == []

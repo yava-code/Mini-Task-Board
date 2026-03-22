@@ -1,27 +1,13 @@
 # Mini-Task-Board
 
-<<<<<<< HEAD
-Делали вдвоём. Простенький клон Trello для практики парной работы и фронтенда (колонки, карточки, Flask + SQLite, логин/регистрация).
-=======
-Делали вдвоём. Простенький клон Trello для практики парной работы и фронтенда (колонки, карточки, Flask + MongoDB, логин/регистрация).
-
-Нужен **MongoDB** локально (по умолчанию `mongodb://127.0.0.1:27017`) или задай `MONGO_URI`. Для продакшена выставь `SECRET_KEY`.
->>>>>>> b4c50dfdc5fd813fc94ac55865b3fe473fef2dd4
+Built in a pair. A small Trello-style board for practicing pair work and frontend (columns, cards, Flask + SQLite, login/signup).
 
 ```bash
 pip install -r requirements.txt
 python app.py
 ```
 
-<<<<<<< HEAD
-Открой http://127.0.0.1:5000 — сначала визитка, потом регистрация/вход и доска на `/board`. Если база старая и падает при старте, удали `instance/tasks.db` и перезапусти.
-=======
-Открой http://127.0.0.1:5000 — зарегистрируйся или войди, потом доска.
-
-Либо `docker compose up` — поднимет MongoDB и приложение вместе.
-
-Тесты поднимают in-memory Mongo через `mongomock`, отдельный демон не нужен:
->>>>>>> b4c50dfdc5fd813fc94ac55865b3fe473fef2dd4
+Open http://127.0.0.1:5000 — landing page first, then register/login and the board at `/board`. If you have an old DB and the app crashes on startup, delete `instance/tasks.db` and restart.
 
 ```bash
 pytest -q

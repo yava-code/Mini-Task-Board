@@ -1,16 +1,16 @@
 {% extends "base.html" %}
-{% block title %}Регистрация — TaskBoard{% endblock %}
+{% block title %}Sign up — TaskBoard{% endblock %}
 {% block content %}
 <form class="auth-form" method="post" action="{{ url_for('register') }}">
-  <h1 style="margin-bottom: 18px;">Регистрация</h1>
+  <h1 style="margin-bottom: 18px;">Sign up</h1>
   {% if error %}
     <p class="auth-error">{{ error }}</p>
   {% endif %}
   <label for="email">Email</label>
   <input id="email" name="email" type="email" autocomplete="username" required>
-  <label for="password">Пароль (мин. 3 символа)</label>
+  <label for="password">Password (min. 3 characters)</label>
   <input id="password" name="password" type="password" autocomplete="new-password" required minlength="3">
-  <button type="submit">Создать аккаунт</button>
-  <p class="auth-switch">Уже есть аккаунт? <a href="{{ url_for('login') }}">Войти</a></p>
+  <button type="submit">Create account</button>
+  <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
 </form>
 {% endblock %}
