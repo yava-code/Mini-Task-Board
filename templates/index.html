@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Task Board</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div id="header"></div>
+
+  <div id="auth-panel" class="auth-panel">
+    <input type="email" id="email" placeholder="Email" autocomplete="username">
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+    <div class="auth-actions">
+      <button type="button" onclick="register()">Register</button>
+      <button type="button" onclick="login()">Login</button>
+    </div>
+  </div>
+
+  <div id="user-bar" class="user-bar" style="display:none">
+    <span id="user-email"></span>
+    <button type="button" onclick="logout()">Logout</button>
+  </div>
+
+  <div id="board-wrap" style="display:none">
+    <div class="board">
+      <div class="col" id="todo">
+        <h2>To Do</h2>
+        <div class="cards"></div>
+        <input placeholder="New task...">
+        <button type="button" onclick="addTask('todo')">+</button>
+      </div>
+      <div class="col" id="doing">
+        <h2>In Progress</h2>
+        <div class="cards"></div>
+      </div>
+      <div class="col" id="done">
+        <h2>Done</h2>
+        <div class="cards"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer"></div>
+  <script src="{{ url_for('static', filename='components.js') }}"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

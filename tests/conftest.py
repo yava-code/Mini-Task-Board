@@ -1,17 +1,19 @@
 import pytest
 
-from app import app, db
+import app as app_module
+from app import app, get_db
 
 
 @pytest.fixture
 def client():
     app.config["TESTING"] = True
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+    app.config["SECRET_KEY"] = "test-secret"
+    app.config["MONGO_URI"] = "mongodb://localhost"
+    app_module.mongo_db = None
     with app.app_context():
-        db.engine.dispose()
-        db.drop_all()
-        db.create_all()
+        db = get_db()
+        db.users.delete_many({})
+        db.tasks.delete_many({})
+        db.users.create_index("email", unique=True)
     with app.test_client() as c:
         yield c
-    with app.app_context():
-        db.drop_all()
