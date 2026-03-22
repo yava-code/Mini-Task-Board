@@ -1,3 +1,34 @@
-<h1>О проекте</h1>
-<p>Мы пишем этот API на Flask, чтобы научиться кодить как боги.</p>
-<a href="/">На главную</a>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<div class="board">
+  <div class="col" style="max-width: 700px; margin: 0 auto; min-height: auto;">
+    <h2>О проекте: Mini Task Board</h2>
+
+    <div class="cards">
+      <div class="card">
+        <span><strong>Назначение:</strong> Веб-приложение для управления задачами с использованием REST API архитектуры.</span>
+      </div>
+
+      <div class="card">
+        <span><strong>Backend:</strong> Python / Flask / SQLAlchemy (ORM). Реализованы CRUD-запросы для работы с данными.</span>
+      </div>
+
+      <div class="card">
+        <span><strong>Database:</strong> SQLite. Обеспечивает надежное хранение и быстрый доступ к информации.</span>
+      </div>
+
+      <div class="card">
+        <span><strong>Frontend:</strong> Адаптивная верстка (HTML5/CSS3) и динамическое обновление данных через JavaScript (Fetch API).</span>
+      </div>
+
+      <div class="card">
+        <span><strong>Version Control:</strong> Проект разработан с применением системы Git для совместной работы.</span>
+      </div>
+    </div>
+
+    <p style="font-size: 13px; color: #888; margin-top: 15px; text-align: center;">
+      Проект демонстрирует навыки фуллстек-разработки и проектирования баз данных.
+    </p>
+
+    <button onclick="window.location.href='/'">Вернуться к приложению</button>
+  </div>
+</div>

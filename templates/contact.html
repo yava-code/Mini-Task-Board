@@ -1,3 +1,18 @@
-<h1>Контакты</h1>
-<p>Пишите нам в Телеграм или ищите на GitHub!</p>
-<a href="/">На главную</a>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<div class="board">
+  <div class="col" style="max-width: 500px; margin: 0 auto; min-height: auto;">
+    <h2>Наши контакты</h2>
+    <div class="cards">
+      <div class="card">
+        <span>GitHub:</span>
+        <button class="move-btn" onclick="window.open('https://github.com')">Link</button>
+      </div>
+      <div class="card">
+        <span>Telegram:</span>
+        <button class="move-btn">@dev_team</button>
+      </div>
+    </div>
+    <p style="font-size: 12px; color: #6b7280; margin: 10px 0;">Пишите по вопросам багов и предложений!</p>
+    <button onclick="window.location.href='/'">На главную</button>
+  </div>
+</div>

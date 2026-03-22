@@ -121,3 +121,13 @@
   .col > button:hover {
     background: #4a59d0;
   }
+
+.col p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.board-centered {
+    justify-content: center;
+}
