@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from datetime import datetime, timezone
@@ -15,6 +15,18 @@ class Task(db.Model):
     title = db.Column(db.String(200), nullable=False)
     status = db.Column(db.String(50), default='todo')
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/info')
+def info():
+    return render_template('info.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
