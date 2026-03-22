@@ -1,10 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Contact</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 <body>
-    <div id="header"></div>
-  
-<h1>Контакты</h1>
-<p>Пишите нам в Телеграм или ищите на GitHub!</p>
-<a href="/">На главную</a>
-<div id="footer"></div>
-<script src="components.js"></script>
-<script src="app.js"></script>  <!-- только на главной -->
+  <div id="header"></div>
+  <main class="page">
+    <h1>Contact</h1>
+    <p>Find us on GitHub or Telegram.</p>
+    <p><a href="/">Back to board</a></p>
+  </main>
+  <div id="footer"></div>
+  <script src="{{ url_for('static', filename='components.js') }}"></script>
 </body>
+</html>
