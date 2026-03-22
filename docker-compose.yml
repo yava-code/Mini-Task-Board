@@ -1,0 +1,15 @@
+services:
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      SECRET_KEY: change-me-in-real-deploy
+    depends_on:
+      - mongo

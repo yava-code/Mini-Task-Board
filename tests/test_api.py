@@ -1,10 +1,25 @@
+def register(client, email="a@b.c", password="secret"):
+    return client.post(
+        "/auth/register",
+        json={"email": email, "password": password},
+        content_type="application/json",
+    )
+
+
+def test_tasks_requires_auth(client):
+    r = client.get("/tasks")
+    assert r.status_code == 401
+
+
 def test_get_tasks_empty(client):
+    assert register(client).status_code == 201
     r = client.get("/tasks")
     assert r.status_code == 200
     assert r.get_json() == []
 
 
 def test_create_and_list_task(client):
+    register(client)
     r = client.post(
         "/tasks",
         json={"title": "buy milk"},
@@ -25,6 +40,7 @@ def test_create_and_list_task(client):
 
 
 def test_patch_status(client):
+    register(client)
     r = client.post("/tasks", json={"title": "x"}, content_type="application/json")
     tid = r.get_json()["id"]
 
@@ -37,11 +53,21 @@ def test_patch_status(client):
 
 
 def test_delete_task(client):
+    register(client)
     r = client.post("/tasks", json={"title": "tmp"}, content_type="application/json")
     tid = r.get_json()["id"]
 
     r = client.delete(f"/tasks/{tid}")
     assert r.status_code == 200
 
+    r = client.get("/tasks")
+    assert r.get_json() == []
+
+
+def test_users_see_own_tasks_only(client):
+    register(client, email="u1@test.com", password="secret")
+    client.post("/tasks", json={"title": "mine"}, content_type="application/json")
+
+    register(client, email="u2@test.com", password="secret")
     r = client.get("/tasks")
     assert r.get_json() == []
