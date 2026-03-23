@@ -43,7 +43,12 @@ function renderCard(task) {
   }
   const delBtn = card.querySelector('[data-del]')
   if (delBtn) {
+  if (confirm("Ты уверен, что хочешь это сделать?")) {
     delBtn.addEventListener('click', () => deleteTask(task.id))
+} else {
+    console.log("Пользователь нажал Нет");
+}
+
   }
 
   col.appendChild(card)
