@@ -41,15 +41,15 @@ function renderCard(task) {
   if (moveBtn) {
     moveBtn.addEventListener('click', () => moveTask(task.id, nextStatus))
   }
-  const delBtn = card.querySelector('[data-del]')
-  if (delBtn) {
-  if (confirm("Ты уверен, что хочешь это сделать?")) {
-    delBtn.addEventListener('click', () => deleteTask(task.id))
-} else {
-    console.log("Пользователь нажал Нет");
+  const delBtn = card.querySelector('[data-del]');
+if (delBtn) {
+  delBtn.addEventListener('click', () => {
+    
+    if (confirm("Delition comfirm")) {
+      deleteTask(task.id);
+    }
+  });
 }
-
-  }
 
   col.appendChild(card)
 }
