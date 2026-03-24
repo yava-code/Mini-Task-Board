@@ -1,4 +1,5 @@
 import os
+import re
 from datetime import datetime, timezone
 from functools import wraps
 from pathlib import Path
@@ -136,7 +137,8 @@ def register():
     if request.method == "POST":
         email = (request.form.get("email") or "").strip().lower()
         password = request.form.get("password") or ""
-        if not email or "@" not in email:
+        email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        if not re.match(email_pattern, email):
             err = "enter a valid email"
         elif len(password) < 3:
             err = "password must be at least 3 characters"
