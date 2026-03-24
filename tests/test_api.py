@@ -46,10 +46,33 @@ def test_patch_status(client):
 
     r = client.patch(f"/tasks/{tid}", json={"status": "doing"})
     assert r.status_code == 200
+    assert r.get_json()["status"] == "doing"
 
     r = client.get("/tasks")
     task = next(t for t in r.get_json() if t["id"] == tid)
     assert task["status"] == "doing"
+
+
+def test_patch_rename(client):
+    register(client)
+    r = client.post("/tasks", json={"title": "old"}, content_type="application/json")
+    tid = r.get_json()["id"]
+
+    r = client.patch(f"/tasks/{tid}", json={"title": "new title"})
+    assert r.status_code == 200
+    assert r.get_json()["title"] == "new title"
+
+    r = client.get("/tasks")
+    task = next(t for t in r.get_json() if t["id"] == tid)
+    assert task["title"] == "new title"
+
+
+def test_openapi_json(client):
+    r = client.get("/openapi.json")
+    assert r.status_code == 200
+    data = r.get_json()
+    assert data["openapi"] == "3.0.3"
+    assert "/tasks" in data["paths"]
 
 
 def test_delete_task(client):

@@ -14,6 +14,7 @@
           <li><a href="{% if session.get('user_id') %}{{ url_for('board') }}{% else %}{{ url_for('index') }}{% endif %}">Home</a></li>
           <li><a href="{{ url_for('info') }}">About</a></li>
           <li><a href="{{ url_for('contact') }}">Contact</a></li>
+          <li><a href="{{ url_for('docs_page') }}">API</a></li>
         </ul>
         <div class="nav-auth">
           {% if session.get('user_id') %}

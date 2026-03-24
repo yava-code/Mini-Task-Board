@@ -32,24 +32,32 @@ function renderCard(task) {
   const nextStatus = order[idx + 1] || null
 
   card.innerHTML = `
-    <span>${esc(task.title)}</span>
+    <span class="title">${esc(task.title)}</span>
+    <button type="button" class="rename-btn" title="Rename">✎</button>
     ${nextStatus ? `<button type="button" class="move-btn" data-move>→</button>` : ''}
     <button type="button" data-del>✕</button>
   `
+
+  card.querySelector('.rename-btn').addEventListener('click', () => {
+    const next = prompt('New title:', task.title)
+    if (next === null) return
+    const t = next.trim()
+    if (!t || t === task.title) return
+    renameTask(task.id, t)
+  })
 
   const moveBtn = card.querySelector('[data-move]')
   if (moveBtn) {
     moveBtn.addEventListener('click', () => moveTask(task.id, nextStatus))
   }
-  const delBtn = card.querySelector('[data-del]');
-if (delBtn) {
-  delBtn.addEventListener('click', () => {
-    
-    if (confirm("Delition comfirm")) {
-      deleteTask(task.id);
-    }
-  });
-}
+  const delBtn = card.querySelector('[data-del]')
+  if (delBtn) {
+    delBtn.addEventListener('click', () => {
+      if (confirm('Delete this task?')) {
+        deleteTask(task.id)
+      }
+    })
+  }
 
   col.appendChild(card)
 }
@@ -67,6 +75,16 @@ async function addTask(colId) {
   })
 
   input.value = ''
+  loadTasks()
+}
+
+async function renameTask(id, title) {
+  await fetch(`${API}/tasks/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ title }),
+  })
   loadTasks()
 }
 

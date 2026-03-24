@@ -1,0 +1,162 @@
+openapi: 3.0.3
+info:
+  title: TaskBoard API
+  version: "1.0.0"
+  description: |
+    JSON API for the task board. All task endpoints require a logged-in browser session
+    (cookie `session`). Log in via `/login` in the browser, then call the API from the same origin
+    with `credentials: include` (or use Swagger UI below with credentials enabled).
+
+servers:
+  - url: /
+
+tags:
+  - name: tasks
+    description: Kanban tasks for the current user
+
+paths:
+  /tasks:
+    get:
+      tags: [tasks]
+      summary: List tasks
+      operationId: listTasks
+      security:
+        - sessionCookie: []
+      responses:
+        "200":
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [tasks]
+      summary: Create task
+      operationId: createTask
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title:
+                  type: string
+                  description: Task title (non-empty)
+                status:
+                  type: string
+                  description: Ignored on create; new tasks start as todo
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "400":
+          description: Missing or empty title
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /tasks/{task_id}:
+    parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: MongoDB ObjectId hex string
+
+    patch:
+      tags: [tasks]
+      summary: Update task (status and/or title)
+      operationId: updateTask
+      security:
+        - sessionCookie: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [todo, doing, done]
+                title:
+                  type: string
+                  description: New title (non-empty if provided)
+      responses:
+        "200":
+          description: Updated task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "400":
+          description: Empty title when title is sent
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: Task not found or not owned by user
+
+    delete:
+      tags: [tasks]
+      summary: Delete task
+      operationId: deleteTask
+      security:
+        - sessionCookie: []
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: Task not found or not owned by user
+
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: session
+      description: Flask session cookie (set after POST /login or /register in browser)
+
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Task ObjectId as hex string
+        title:
+          type: string
+        status:
+          type: string
+          enum: [todo, doing, done]
+
+  responses:
+    Unauthorized:
+      description: Not logged in
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: unauthorized

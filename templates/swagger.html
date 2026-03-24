@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Swagger — TaskBoard API</title>
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" crossorigin>
+  <style>
+    body { margin: 0; }
+    .tb-bar { background: #1e1e2e; color: #9ca3b8; padding: 10px 16px; font-family: system-ui, sans-serif; font-size: 14px; }
+    .tb-bar a { color: #5b6af0; }
+    #swagger-ui { max-width: 1200px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div class="tb-bar">
+    <a href="{{ url_for('docs_page') }}">← Docs</a>
+    · <a href="{{ url_for('board') }}">Board</a>
+    · Log in via <a href="{{ url_for('login') }}">/login</a> first so Try it out sends your session cookie.
+  </div>
+  <div id="swagger-ui"></div>
+  <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js" crossorigin></script>
+  <script>
+    window.onload = () => {
+      window.ui = SwaggerUIBundle({
+        url: '{{ url_for("openapi_json") }}',
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [SwaggerUIBundle.presets.apis, SwaggerUIBundle.SwaggerUIStandalonePreset],
+        requestInterceptor: (req) => {
+          req.credentials = 'include'
+          return req
+        },
+      })
+    }
+  </script>
+</body>
+</html>

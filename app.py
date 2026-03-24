@@ -1,7 +1,9 @@
 import os
 from datetime import datetime, timezone
 from functools import wraps
+from pathlib import Path
 
+import yaml
 from bson import ObjectId
 from bson.errors import InvalidId
 from flask import Flask, jsonify, redirect, render_template, request, session, url_for
@@ -85,6 +87,24 @@ def info():
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
+
+
+@app.route("/docs")
+def docs_page():
+    return render_template("docs.html")
+
+
+@app.route("/swagger")
+def swagger_ui():
+    return render_template("swagger.html")
+
+
+@app.route("/openapi.json")
+def openapi_json():
+    spec_path = Path(__file__).resolve().parent / "openapi.yaml"
+    with open(spec_path, encoding="utf-8") as f:
+        spec = yaml.safe_load(f)
+    return jsonify(spec)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -191,9 +211,30 @@ def update_task(task_id):
         return jsonify({"error": "not found"}), 404
 
     data = request.get_json() or {}
+    if not data:
+        return jsonify({"error": "no fields"}), 400
+
+    updates = {}
     if "status" in data:
-        db.tasks.update_one({"_id": oid}, {"$set": {"status": data["status"]}})
-    return jsonify({"message": "ok"})
+        updates["status"] = data["status"]
+    if "title" in data:
+        title = (data.get("title") or "").strip()
+        if not title:
+            return jsonify({"error": "title required"}), 400
+        updates["title"] = title
+
+    if not updates:
+        return jsonify({"error": "no fields"}), 400
+
+    db.tasks.update_one({"_id": oid}, {"$set": updates})
+    updated = db.tasks.find_one({"_id": oid})
+    return jsonify(
+        {
+            "id": str(updated["_id"]),
+            "title": updated["title"],
+            "status": updated["status"],
+        }
+    )
 
 
 @app.route("/tasks/<task_id>", methods=["DELETE"])

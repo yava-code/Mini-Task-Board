@@ -98,6 +98,19 @@ h1 {
   color: #5b6af0;
 }
 
+.docs-page .docs-list {
+  margin: 16px 0 16px 20px;
+  line-height: 1.75;
+  color: #b8bfd4;
+}
+
+.docs-page .docs-list code {
+  background: #13131f;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
 .auth-form {
   max-width: 360px;
   margin: 0 auto;
@@ -310,6 +323,15 @@ footer.site-footer {
 
 .card .move-btn:hover {
   color: #a0c4ff;
+}
+
+.card .rename-btn {
+  color: #9ca3b8;
+  font-size: 14px;
+}
+
+.card .rename-btn:hover {
+  color: #5b6af0;
 }
 
 .col input {
