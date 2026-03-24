@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+[v-cloak] {
+  display: none !important;
+}
+
 .page-shell {
   min-height: 100vh;
   display: flex;

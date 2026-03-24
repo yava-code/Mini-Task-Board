@@ -1,6 +1,6 @@
 # Mini-Task-Board
 
-Built in a pair. A small Trello-style board for practicing pair work and frontend (columns, cards, Flask + MongoDB, login/signup).
+Built in a pair. A small Trello-style board for practicing pair work and frontend (columns, cards, Flask + MongoDB, login/signup). The board page uses **Vue 3** (CDN, no build) for reactive state.
 
 Run **MongoDB** locally (default `mongodb://127.0.0.1:27017`) or set `MONGO_URI`. Set `SECRET_KEY` in production.
 

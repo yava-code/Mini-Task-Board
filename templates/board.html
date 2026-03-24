@@ -1,23 +1,41 @@
 {% extends "base.html" %}
 {% block title %}Board — TaskBoard{% endblock %}
 {% block content %}
-<div class="board">
-  <div class="col" id="todo">
-    <h2>To Do</h2>
-    <div class="cards"></div>
-    <input placeholder="New task...">
-    <button type="button" onclick="addTask('todo')">+</button>
-  </div>
-  <div class="col" id="doing">
-    <h2>In Progress</h2>
-    <div class="cards"></div>
-  </div>
-  <div class="col" id="done">
-    <h2>Done</h2>
-    <div class="cards"></div>
+<script type="text/x-template" id="board-template">
+{% raw %}
+<div class="board" v-cloak>
+  <div v-for="col in columns" :key="col.id" class="col" :id="col.id">
+    <h2>{{ col.title }}</h2>
+    <div class="cards">
+      <div v-for="t in grouped[col.id]" :key="t.id" class="card">
+        <span class="title">{{ t.title }}</span>
+        <button type="button" class="rename-btn" title="Rename" @click="rename(t)">✎</button>
+        <button
+          v-if="nextStatus(t.status)"
+          type="button"
+          class="move-btn"
+          @click="move(t, nextStatus(t.status))"
+        >→</button>
+        <button type="button" @click="remove(t)">✕</button>
+      </div>
+    </div>
+    <template v-if="col.canAdd">
+      <input v-model="draft" placeholder="New task..." @keyup.enter="addTask">
+      <button type="button" @click="addTask">+</button>
+    </template>
   </div>
 </div>
+{% endraw %}
+</script>
+<div id="board-app"></div>
 {% endblock %}
 {% block scripts %}
-<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script type="importmap">
+{
+  "imports": {
+    "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+  }
+}
+</script>
+<script type="module" src="{{ url_for('static', filename='board.js') }}"></script>
 {% endblock %}
