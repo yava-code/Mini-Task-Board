@@ -287,6 +287,14 @@ footer.site-footer {
   margin-bottom: 12px;
 }
 
+.cards:empty::before {
+    content: "No tasks"; /* Текст, который появится */
+    display: block;      /* Чтобы текст вел себя как отдельный блок */
+    color: gray;         /* Сделаем его неброским */
+    text-align: center;  /* Выровняем по центру */
+    padding: 20px;       /* Добавим немного свободного места */
+}
+
 .card {
   background: #13131f;
   border: 1px solid #2d2d3f;
