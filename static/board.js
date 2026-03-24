@@ -87,7 +87,6 @@ createApp({
       columns,
       grouped,
       draft,
-      loading,
       nextStatus,
       addTask,
       rename,
