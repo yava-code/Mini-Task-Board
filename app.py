@@ -26,7 +26,7 @@ def init_db():
     global mongo_db
     uri = os.environ.get("MONGO_URL", app.config.get("MONGO_URI", "mongodb://localhost:27017/"))
     client = MongoClient(uri)
-    mongo_db = client[app.config["MONGO_DB_NAME", "mytaskdb"]]
+    mongo_db = client[app.config.get("MONGO_DB_NAME", "mytaskdb")]
     mongo_db.users.create_index("email", unique=True)
 
 
