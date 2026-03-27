@@ -261,10 +261,45 @@ footer.site-footer {
 
 .board {
   display: flex;
+  flex-wrap: wrap;
   gap: 16px;
   align-items: flex-start;
   max-width: 960px;
   margin: 0 auto;
+}
+
+.board-state {
+  width: 100%;
+  min-height: 22px;
+}
+
+.board-loading {
+  color: #9ca3b8;
+  font-size: 13px;
+}
+
+.board-msg {
+  color: #86efac;
+  font-size: 13px;
+}
+
+.board-msg.err {
+  color: #f87171;
+}
+
+.retry-btn {
+  margin-top: 6px;
+  background: #2d2d3f;
+  border: 1px solid #4b5563;
+  color: #d1d5db;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.retry-btn:hover {
+  border-color: #5b6af0;
 }
 
 .col {
@@ -315,6 +350,17 @@ footer.site-footer {
   flex: 1;
 }
 
+.card .edit-input {
+  flex: 1;
+  min-width: 0;
+  background: #0f0f1a;
+  border: 1px solid #3a3a54;
+  border-radius: 6px;
+  color: #d0d4e8;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
 .card button {
   background: none;
   border: none;
@@ -323,6 +369,12 @@ footer.site-footer {
   font-size: 16px;
   padding: 0 4px;
   transition: color 0.2s;
+}
+
+.card button:disabled,
+.col > button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .card button:hover {
@@ -344,6 +396,22 @@ footer.site-footer {
 
 .card .rename-btn:hover {
   color: #5b6af0;
+}
+
+.card .save-btn {
+  color: #22c55e;
+}
+
+.card .save-btn:hover {
+  color: #86efac;
+}
+
+.card .cancel-btn {
+  color: #f87171;
+}
+
+.card .cancel-btn:hover {
+  color: #fca5a5;
 }
 
 .col input {

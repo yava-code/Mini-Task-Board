@@ -13,16 +13,16 @@
 </head>
 <body>
   <div class="tb-bar">
-    <a href="{{ url_for('docs_page') }}">← Docs</a>
-    · <a href="{{ url_for('board') }}">Board</a>
-    · Log in via <a href="{{ url_for('login') }}">/login</a> first so Try it out sends your session cookie.
+    <a href="{{ url_for('main.docs_page') }}">← Docs</a>
+    · <a href="{{ url_for('main.board') }}">Board</a>
+    · Log in via <a href="{{ url_for('auth.login') }}">/login</a> first so Try it out sends your session cookie.
   </div>
   <div id="swagger-ui"></div>
   <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js" crossorigin></script>
   <script>
     window.onload = () => {
       window.ui = SwaggerUIBundle({
-        url: '{{ url_for("openapi_json") }}',
+        url: '{{ url_for("main.openapi_json") }}',
         dom_id: '#swagger-ui',
         deepLinking: true,
         presets: [SwaggerUIBundle.presets.apis, SwaggerUIBundle.SwaggerUIStandalonePreset],

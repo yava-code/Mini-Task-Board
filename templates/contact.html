@@ -4,7 +4,7 @@
 <div class="page">
   <h1>Contact</h1>
   <p>Reach us on Telegram or find the repo on GitHub.</p>
-  <p><a href="{{ url_for('welcome_page') }}">Landing page</a>
-  {% if session.get('user_id') %} · <a href="{{ url_for('board') }}">Board</a>{% endif %}</p>
+  <p><a href="{{ url_for('main.welcome_page') }}">Landing page</a>
+  {% if session.get('user_id') %} · <a href="{{ url_for('main.board') }}">Board</a>{% endif %}</p>
 </div>
 {% endblock %}

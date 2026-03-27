@@ -8,20 +8,20 @@
 <body class="page-shell">
   <header class="site-header">
     <div class="inner">
-      <a class="logo" href="{% if session.get('user_id') %}{{ url_for('board') }}{% else %}{{ url_for('index') }}{% endif %}">TaskBoard</a>
+      <a class="logo" href="{% if session.get('user_id') %}{{ url_for('main.board') }}{% else %}{{ url_for('main.index') }}{% endif %}">TaskBoard</a>
       <nav>
         <ul>
-          <li><a href="{% if session.get('user_id') %}{{ url_for('board') }}{% else %}{{ url_for('index') }}{% endif %}">Home</a></li>
-          <li><a href="{{ url_for('info') }}">About</a></li>
-          <li><a href="{{ url_for('contact') }}">Contact</a></li>
-          <li><a href="{{ url_for('docs_page') }}">API</a></li>
+          <li><a href="{% if session.get('user_id') %}{{ url_for('main.board') }}{% else %}{{ url_for('main.index') }}{% endif %}">Home</a></li>
+          <li><a href="{{ url_for('main.info') }}">About</a></li>
+          <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
+          <li><a href="{{ url_for('main.docs_page') }}">API</a></li>
         </ul>
         <div class="nav-auth">
           {% if session.get('user_id') %}
-            <a href="{{ url_for('logout') }}">Log out</a>
+            <a href="{{ url_for('auth.logout') }}">Log out</a>
           {% else %}
-            <a class="nav-btn" href="{{ url_for('login') }}">Log in</a>
-            <a class="nav-btn" href="{{ url_for('register') }}">Sign up</a>
+            <a class="nav-btn" href="{{ url_for('auth.login') }}">Log in</a>
+            <a class="nav-btn" href="{{ url_for('auth.register') }}">Sign up</a>
           {% endif %}
         </div>
       </nav>

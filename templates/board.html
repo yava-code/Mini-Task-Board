@@ -4,30 +4,48 @@
 <script type="text/x-template" id="board-template">
 {% raw %}
 <div class="board" v-cloak>
+  <div class="board-state">
+    <p v-if="loading" class="board-loading">Loading...</p>
+    <p v-if="msg" class="board-msg" :class="{ err: msgType === 'err' }">{{ msg }}</p>
+    <button v-if="msgType === 'err' && !loading" type="button" class="retry-btn" @click="load">Retry</button>
+  </div>
   <div v-for="col in columns" :key="col.id" class="col" :id="col.id">
     <h2>{{ col.title }}</h2>
     <div class="cards">
       <div v-for="t in grouped[col.id]" :key="t.id" class="card">
-        <span class="title">{{ t.title }}</span>
-        <button type="button" class="rename-btn" title="Rename" @click="rename(t)">✎</button>
-        <button
-          v-if="nextStatus(t.status)"
-          type="button"
-          class="move-btn"
-          @click="move(t, nextStatus(t.status))"
-        >→</button>
-        <button type="button" @click="remove(t)">✕</button>
+        <template v-if="editId === t.id">
+          <input
+            v-model="editDraft"
+            class="edit-input"
+            @keyup.enter="saveRename(t)"
+            @keyup.esc="cancelRename"
+          >
+          <button type="button" class="save-btn" @click="saveRename(t)">✓</button>
+          <button type="button" class="cancel-btn" @click="cancelRename">✕</button>
+        </template>
+        <template v-else>
+          <span class="title">{{ t.title }}</span>
+          <button type="button" class="rename-btn" :disabled="busy" title="Rename" @click="startRename(t)">✎</button>
+          <button
+            v-if="nextStatus(t.status)"
+            type="button"
+            class="move-btn"
+            :disabled="busy"
+            @click="move(t, nextStatus(t.status))"
+          >→</button>
+          <button type="button" :disabled="busy" @click="remove(t)">✕</button>
+        </template>
       </div>
     </div>
     <template v-if="col.canAdd">
-      <input v-model="draft" placeholder="New task..." @keyup.enter="addTask">
-      <button type="button" @click="addTask">+</button>
+      <input v-model="draft" :disabled="busy" placeholder="New task..." @keyup.enter="addTask">
+      <button type="button" :disabled="busy" @click="addTask">+</button>
     </template>
   </div>
 </div>
 {% endraw %}
 </script>
-<div id="board-app"></div>
+<div id="board-app" data-csrf-token="{{ csrf_token }}"></div>
 {% endblock %}
 {% block scripts %}
 <script type="importmap">

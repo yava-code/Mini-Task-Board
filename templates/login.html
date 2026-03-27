@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Log in — TaskBoard{% endblock %}
 {% block content %}
-<form class="auth-form" method="post" action="{{ url_for('login') }}">
+<form class="auth-form" method="post" action="{{ url_for('auth.login') }}">
   <h1 style="margin-bottom: 18px;">Log in</h1>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
   {% if request.args.get('next') %}
     <input type="hidden" name="next" value="{{ request.args.get('next') }}">
   {% endif %}
@@ -14,6 +15,6 @@
   <label for="password">Password</label>
   <input id="password" name="password" type="password" autocomplete="current-password" required>
   <button type="submit">Log in</button>
-  <p class="auth-switch">No account? <a href="{{ url_for('register') }}">Sign up</a></p>
+  <p class="auth-switch">No account? <a href="{{ url_for('auth.register') }}">Sign up</a></p>
 </form>
 {% endblock %}
