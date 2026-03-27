@@ -30,14 +30,16 @@ MIN_PASSWORD_LEN = 8
 
 def init_db():
     app = current_app._get_current_object()
-    uri = app.config["MONGO_URI"]
+    uri = os.environ.get(
+        "MONGO_URL", app.config.get("MONGO_URI", "mongodb://localhost:27017/")
+    )
     if app.config.get("TESTING"):
         import mongomock
 
         client = mongomock.MongoClient()
     else:
         client = MongoClient(uri)
-    db = client[app.config["MONGO_DB_NAME"]]
+    db = client[app.config.get("MONGO_DB_NAME", "mytaskdb")]
     db.users.create_index("email", unique=True)
     db.tasks.create_index([("user_id", 1), ("created_at", 1)])
     app.extensions["mongo_db"] = db
