@@ -7,7 +7,6 @@ from app import app, get_db
 def client():
     app.config["TESTING"] = True
     app.config["SECRET_KEY"] = "test-secret"
-    app.config["MONGO_URI"] = "mongodb://localhost"
     app.extensions.pop("mongo_db", None)
     with app.app_context():
         db = get_db()

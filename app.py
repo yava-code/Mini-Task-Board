@@ -33,12 +33,7 @@ def init_db():
     uri = os.environ.get(
         "MONGO_URL", app.config.get("MONGO_URI", "mongodb://localhost:27017/")
     )
-    if app.config.get("TESTING"):
-        import mongomock
-
-        client = mongomock.MongoClient()
-    else:
-        client = MongoClient(uri)
+    client = MongoClient(uri)
     db = client[app.config.get("MONGO_DB_NAME", "mytaskdb")]
     db.users.create_index("email", unique=True)
     db.tasks.create_index([("user_id", 1), ("created_at", 1)])
