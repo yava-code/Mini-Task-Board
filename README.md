@@ -15,7 +15,9 @@ Open http://127.0.0.1:5000 — landing page, then register/login and the board a
 
 Or `docker compose up` to run MongoDB and the app together.
 
-Tests use **mongomock** (no Mongo daemon needed):
+**Tests & CI:**
+
+Tests use a real MongoDB instance (local or via GitHub Actions service)::
 
 ```bash
 pytest -q
